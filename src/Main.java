@@ -1,23 +1,49 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class Main {
-    long dinero=100;
-    public long getDinero() {
-        return dinero;
+    private static int dinero = 100;
+
+    public static void main(String[] args) {
+        List<Thread> hilos = new ArrayList<>();
+        hilos.add(new Thread(new HiloDescontar("Hilo 1")));
+        hilos.add(new Thread(new HiloDescontar("Hilo 2")));
+        hilos.add(new Thread(new HiloDescontar("Hilo 3")));
+        hilos.add(new Thread(new HiloDescontar("Hilo 4")));
+        Collections.shuffle(hilos);
+        for (Thread hilo : hilos) {
+            hilo.start();
+        }
     }
 
-    public void setDinero(long dinero) {
-        this.dinero = dinero;
-    }
-    public static void main(String[] args) {
-        Main mainInstance = new Main();
-        Hilos hilo1 = new Hilos(mainInstance);
-        Hilos hilo2 = new Hilos(mainInstance);
-        Hilos hilo3 = new Hilos(mainInstance);
-        Hilos hilo4 = new Hilos(mainInstance);
-        hilo1.start();
-        hilo2.start();
-        hilo3.start();
-        hilo4.start();
+    static class HiloDescontar implements Runnable {
+        private final String nombreHilo;
+
+        public HiloDescontar(String nombreHilo) {
+            this.nombreHilo = nombreHilo;
+        }
+
+        @Override
+        public void run() {
+            synchronized (Main.class) {
+                try {
+                    long inicio = System.currentTimeMillis();
+                    TimeUnit.SECONDS.sleep(1);
+                    if (dinero >= 30) {
+                        dinero -= 30;
+                        System.out.println(nombreHilo + " descontó 30 pesos. Dinero restante: " + dinero);
+                    } else {
+                        System.err.println(nombreHilo + " no tiene suficiente dinero para descontar.");
+                    }
+                    long fin = System.currentTimeMillis();
+                    long tiempoEjecucion = fin - inicio;
+                    System.out.println(nombreHilo + " tardó " + tiempoEjecucion + " milisegundos en ejecutarse.");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
