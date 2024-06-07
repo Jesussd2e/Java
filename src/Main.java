@@ -33,7 +33,7 @@ public class Main {
                     TimeUnit.SECONDS.sleep(1);
                     if (dinero >= 30) {
                         dinero -= 30;
-                        System.out.println(nombreHilo + " descontó 30 pesos. Dinero restante: " + dinero);
+                        System.out.println(nombreHilo + " descontó 30 pesos. Dinero restante: " + dinero + inicio);
                     } else {
                         System.err.println(nombreHilo + " no tiene suficiente dinero para descontar.");
                     }
